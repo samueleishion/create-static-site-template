@@ -1,5 +1,5 @@
 # create-static-site
-Seed project generator with express and node.
+Static site generator with express and node.
 
 ## Installation
 

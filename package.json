@@ -1,7 +1,7 @@
 {
-  "name": "pebbble.io-test",
-  "version": "1.0.0",
-  "description": "Tech test for pebbble.io concept",
+  "name": "create-static-site",
+  "version": "0.0.1",
+  "description": "Static site generator with express and node.",
   "main": "index.js",
   "scripts": {
     "reset": "rm -rf node_modules; rm -rf static/scrs; rm -rf static/stys; ",
