@@ -1,10 +1,10 @@
 {
   "name": "create-static-site",
   "version": "0.0.1",
-  "description": "Static site generator with express and node.",
+  "description": "Static site generator with express, node, metalsmith, and sass.",
   "main": "index.js",
   "scripts": {
-    "reset": "rm -rf node_modules; rm -rf static/scrs; rm -rf static/stys; ",
+    "reset": "rm -rf node_modules; rm -rf static",
     "postinstall": "mkdir static/scrs; mkdir static/stys; npm run build:prod",
     "test": "echo \"Error: no test specified\" && exit 1",
     "build:dev": "npm run serve & gulp dev",
@@ -33,12 +33,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/samueleishion/xexn.git"
+    "url": "git+https://github.com/samueleishion/create-static-site.git"
   },
   "bugs": {
-    "url": "https://github.com/samueleishion/xexn/issues"
+    "url": "https://github.com/samueleishion/create-static-site/issues"
   },
-  "homepage": "https://github.com/samueleishion/xexn#readme",
+  "homepage": "https://github.com/samueleishion/create-static-site#readme",
   "pre-commit": [
     "lint"
   ]
