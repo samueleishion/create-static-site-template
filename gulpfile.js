@@ -11,11 +11,28 @@ var gulp = require('gulp'),
   concat = require('gulp-concat'),
   uglify = require('gulp-uglify'),
   bs = require('browser-sync').create(),
+  axe = require('gulp-axe-cli'),
   eslintConfig = {
     configFile: 'eslintrc.json',
     rules: {
       "no-console": "off"
     }
+  },
+  prettierConfig = {
+    config: '.prettierrc'
+  },
+  sasslintConfig = {
+    configFile: '.sass-lint.yml'
+  },
+  axeConfig = {
+    urls: function(file) {
+      var host = 'http://localhost:9999/';
+      var dir = file.substring(file.lastIndexOf('/'));
+      var page = file.substring(file.lastIndexOf('/') + 1, file.lastIndexOf('.'));
+
+      return host + path;
+    },
+    tags: ['wcag2a','wcag2aa']
   };
 
 // Dev mode with hot-reloading
@@ -65,6 +82,15 @@ gulp.task('js', function() {
 gulp.task('js:watch', function() {
   return gulp.watch('./src/**/*.js', ['js']);
 });
+
+gulp.task("test:a11y", function() {
+  return gulp
+    .src(["./static/**/*.html"])
+    .pipe(axe(axeConfig))
+    .pipe(gulp.dest('./.axe-dump'));
+});
+
+gulp.task("test", gulp.series("test:a11y"));
 
 gulp.task('dev', function() {
   gulp.start('sass');
