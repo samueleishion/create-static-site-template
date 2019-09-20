@@ -6,14 +6,16 @@
   "scripts": {
     "reset": "rimraf node_modules static",
     "prepare": "mkdir static/scrs; mkdir static/stys; npm run build:prod",
-    "test": "echo \"Error: no test specified\" && exit 1",
     "build:dev": "npm-run-all --parallel serve \"gulp build:dev\"",
     "build:prod": "echo 'build:prod'",
     "serve": "run-node server.js",
     "start": "npm-run-all build:dev",
     "lint:prettier": "prettier --config ./.prettierrc --write \"./src/modules/*.js\" \"./src/scripts/*.js\"",
     "lint:eslint": "eslint --config ./eslintrc.json --fix --ext .js,.jsx ./src/modules/** ./src/scripts/**",
+    "lint:sass": "sass-lint --config ./.sass-lint.yml './src/styles/*.scss' './src/modules/**/*.scss' -q -v",
     "lint": "npm-run-all lint:*",
+    "test:a11y": "echo 'npm test:a11y'",
+    "test": "npm-run-all test:*",
     "eslint": "eslint",
     "prettier": "prettier",
     "rimraf": "rimraf"
@@ -37,6 +39,7 @@
     "eslint-plugin-prettier": "^3.1.1",
     "express": "^4.17.1",
     "gulp": "^4.0.2",
+    "gulp-axe-cli": "^0.1.4",
     "gulp-cli": "^2.2.0",
     "gulp-concat": "^2.6.1",
     "gulp-eslint": "^6.0.0",
@@ -58,6 +61,7 @@
     "prettier": "^1.18.2",
     "rimraf": "^3.0.0",
     "run-node": "^1.0.0",
+    "sass-lint": "^1.13.1",
     "terminal-kit": "^1.31.3"
   },
   "husky": {
