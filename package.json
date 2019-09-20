@@ -7,7 +7,7 @@
     "reset": "rimraf node_modules static",
     "prepare": "mkdir static/scrs; mkdir static/stys; npm run build:prod",
     "build:dev": "npm-run-all --parallel serve \"gulp build:dev\"",
-    "build:prod": "echo 'build:prod'",
+    "build:prod": "gulp build:prod",
     "serve": "run-node server.js",
     "start": "npm-run-all build:dev",
     "lint:prettier": "prettier --config ./.prettierrc --write \"./src/modules/*.js\" \"./src/scripts/*.js\"",
@@ -17,6 +17,7 @@
     "test:a11y": "echo 'npm test:a11y'",
     "test": "npm-run-all test:*",
     "eslint": "eslint",
+    "gulp": "gulp",
     "prettier": "prettier",
     "rimraf": "rimraf"
   },

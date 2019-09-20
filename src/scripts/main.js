@@ -1,2 +1,3 @@
-var four;
-four = 4;
+$(function() {
+  // console.log('hello world.');
+});

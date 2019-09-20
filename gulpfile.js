@@ -1,30 +1,47 @@
 'use strict';
 
-var gulp = require('gulp'),
-  gutil = require('gulp-util'), // @TODO evaluate if there's still need for this
-  exec = require('gulp-exec'),
-  sass = require('gulp-sass'),
-  concat = require('gulp-concat'),
-  eslint = require('gulp-eslint'),
-  prettier = require('gulp-prettier'),
-  rename = require('gulp-rename'),
-  concat = require('gulp-concat'),
-  uglify = require('gulp-uglify-es').default,
-  bs = require('browser-sync').create(),
-  axe = require('gulp-axe-cli'),
-  eslintConfig = {
+const gulp = require('gulp');
+const gutil = require('gulp-util'); // @TODO evaluate if there's still need for this
+const exec = require('gulp-exec');
+const sass = require('gulp-sass');
+const concat = require('gulp-concat');
+const rename = require('gulp-rename');
+const eslint = require('gulp-eslint');
+const prettier = require('gulp-prettier');
+const sasslint = require('gulp-sass-lint');
+const uglify = require('gulp-uglify-es').default;
+const bs = require('browser-sync').create();
+const axe = require('gulp-axe-cli');
+
+let CONFIG = {
+  browsersync: {
+    proxy: 'localhost:9999',
+    logFileChanges: true
+  },
+  metalsmith: {
+    runtime: {
+      continueOnError: false,
+      pipeStdout: false
+    },
+    onerror: {
+      err: true,
+      stderr: true,
+      stdout: true
+    }
+  },
+  eslint: {
     configFile: 'eslintrc.json',
     rules: {
       "no-console": "off"
     }
   },
-  prettierConfig = {
+  prettier: {
     config: '.prettierrc'
   },
-  sasslintConfig = {
+  sasslint: {
     configFile: '.sass-lint.yml'
   },
-  axeConfig = {
+  axe: {
     urls: function(file) {
       var host = 'http://localhost:9999/';
       var dir = file.substring(file.lastIndexOf('/'));
@@ -33,16 +50,14 @@ var gulp = require('gulp'),
       return host + path;
     },
     tags: ['wcag2a','wcag2aa']
-  };
+  }
+};
 
 // Dev mode with hot-reloading
 gulp.task('browser-sync', function() {
-  bs.init({
-    proxy: 'localhost:9999',
-    logFileChanges: true
-  });
+  bs.init(CONFIG.browsersync);
 
-  return gulp.watch(['./static/**/*.*'], function() {
+  return gulp.watch(['./src/**/*.*'], function() {
     setTimeout(function() {
       bs.reload();
     }, 500);
@@ -58,17 +73,10 @@ gulp.task('html', function() {
   return gulp
     .src(['./src/modules/**/*.md', './src/layouts/**/*.html'])
     .pipe(
-      exec('node index.js', {
-        continueOnError: false,
-        pipeStdout: false
-      })
+      exec('node index.js', CONFIG.metalsmith.runtime)
     )
     .pipe(
-      exec.reporter({
-        err: true,
-        stderr: true,
-        stdout: true
-      })
+      exec.reporter(CONFIG.metalsmith.onerror)
     );
 });
 
@@ -76,59 +84,126 @@ gulp.task('html:watch', function() {
   return gulp.watch(['./src/modules/**/*.md', './src/layouts/*.html'], gulp.parallel('html'));
 });
 
-
+/*
+// =======================
+//  SASS
+// =======================
+*/
 gulp.task('sass', function() {
   return gulp
-    .src(['./src/layouts/styles.scss'])
+    .src(['./src/styles/global.scss'])
     .pipe(
       sass({
-        includePaths: ['./src/layouts/', './src/components/', './src/modules'],
+        includePaths: ['./src/styles/', './src/modules'],
         outputStyle: 'compressed'
       }).on('error', sass.logError)
     )
-    .pipe(rename('styles.min.css'))
-    .pipe(gulp.dest('./static/stys'));
-})
-
-gulp.task('sass:watch', function() {
-  return gulp.watch(['./src/**/*.scss'], ['sass']);
+    .pipe(rename('bundle.min.css'))
+    .pipe(gulp.dest('./static/_styles'));
 });
 
+gulp.task('sass:lint', function() {
+  return gulp
+    .src(['./src/components/**/*.scss', './src/layouts/_stys/*.scss'])
+    .pipe(sasslint(CONFIG.sasslint))
+    .pipe(sassling.format())
+    .pipe(sasslint.failOnError());
+});
+
+gulp.task('sass:watch', function() {
+  return gulp.watch(
+    ['./src/styles/*.scss', './src/modules/**/*.scss'],
+    gulp.series('sass:lint', 'sass')
+  );
+});
+
+/*
+// =======================
+//  Javascript
+// =======================
+*/
 gulp.task('js', function() {
   return gulp
-    .src('./src/**/*.js')
-    .pipe(eslint(eslintConfig))
+    .src(['./src/scripts/*.js', './src/modules/**/*.js'])
+    .pipe(eslint(CONFIG.eslint))
     .pipe(eslint.format())
     .on('error', function(err) {
       gutil.log(gutil.colors.red('[ERROR]', err.toString()));
     })
     .pipe(concat('bundle.min.js'))
     .pipe(uglify())
-    .pipe(gulp.dest('./static/scrs'));
+    .pipe(gulp.dest('./static/_scripts'));
 });
 
 gulp.task('js:watch', function() {
-  return gulp.watch('./src/**/*.js', ['js']);
+  return gulp.watch(
+    ['./src/scripts/*.js', './src/modules/**/*.js'],
+    gulp.series('js')
+  );
 });
 
+/*
+// =======================
+//  Vendor files
+// =======================
+*/
+gulp.task("copy:vendor:scripts", function() {
+  return gulp.src(
+    ['./src/scripts/_vendor/**/*'],
+    {
+      base: 'src/scripts'
+    })
+    .pipe(gulp.dest('static'));
+});
+
+gulp.task("copy:vendor:styles", function() {
+  return gulp.src(
+    ['./src/styles/_vendor/**/*'],
+    {
+      base: 'src/styles'
+    })
+    .pipe(gulp.dest('static'));
+});
+
+gulp.task('copy:vendor', gulp.parallel(
+  'copy:vendor:scripts',
+  'copy:vendor:styles'
+));
+
+/*
+// =======================
+//  Tests
+// =======================
+*/
 gulp.task("test:a11y", function() {
   return gulp
     .src(["./static/**/*.html"])
-    .pipe(axe(axeConfig))
+    .pipe(axe(CONFIG.axe))
     .pipe(gulp.dest('./.axe-dump'));
 });
 
 gulp.task("test", gulp.series("test:a11y"));
 
-gulp.task('dev', function() {
-  gulp.start('sass');
-  gulp.start('sass:watch');
-  gulp.start('js');
-  gulp.start('js:watch');
-  gulp.start('browser-sync');
-});
+/*
+// =======================
+//  Build
+// =======================
+*/
+gulp.task('build:prod', gulp.parallel(
+  'sass',
+  'js',
+  'html',
+  'copy:vendor'
+));
 
-gulp.task('prod', function() {
-  gulp.start('sass');
-  gulp.start('js');
-});
+gulp.task('build:dev', gulp.series(
+  gulp.parallel(
+    'build:prod'
+  ),
+  gulp.parallel(
+    'sass:watch',
+    'js:watch',
+    'html:watch',
+    'browser-sync'
+  )
+));
