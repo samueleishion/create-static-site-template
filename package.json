@@ -4,33 +4,21 @@
   "description": "Static site generator with express, node, metalsmith, and sass.",
   "main": "index.js",
   "scripts": {
-    "reset": "rm -rf node_modules; rm -rf static",
-    "postinstall": "mkdir static/scrs; mkdir static/stys; npm run build:prod",
+    "reset": "rimraf node_modules static",
+    "prepare": "mkdir static/scrs; mkdir static/stys; npm run build:prod",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build:dev": "npm run serve & gulp dev",
+    "build:dev": "npm-run-all --parallel serve \"gulp build:dev\"",
     "build:prod": "gulp prod",
-    "serve": "node index.js",
+    "serve": "run-node server.js",
+    "start": "npm-run-all build:dev",
     "lint:prettier": "./node_modules/prettier/bin/prettier.js --config ./.prettierrc --write \"./src/**/*.js*\"",
     "lint:eslint": "./node_modules/eslint/bin/eslint.js --config ./eslintrc.json --fix --ext .js,.jsx ./src",
-    "lint": "npm run lint:prettier; npm run lint:eslint"
+    "lint": "npm-run-all lint:*",
+    "rimraf": "rimraf"
   },
   "author": "samueleishion",
   "license": "ISC",
-  "dependencies": {
-    "browser-sync": "^2.18.13",
-    "express": "^4.15.5",
-    "gulp": "^3.9.1",
-    "gulp-cli": "^1.2.1",
-    "gulp-concat": "^2.6.1",
-    "gulp-eslint": "^4.0.0",
-    "gulp-exec": "^2.1.3",
-    "gulp-prettier": "^1.1.0",
-    "gulp-rename": "^1.2.2",
-    "gulp-sass": "^3.1.0",
-    "gulp-uglify": "^3.0.0",
-    "gulp-util": "^3.0.7",
-    "gulp-watch": "^4.3.11"
-  },
+  "dependencies": {},
   "repository": {
     "type": "git",
     "url": "git+https://github.com/samueleishion/create-static-site.git"
@@ -39,7 +27,40 @@
     "url": "https://github.com/samueleishion/create-static-site/issues"
   },
   "homepage": "https://github.com/samueleishion/create-static-site#readme",
-  "pre-commit": [
-    "lint"
-  ]
+  "devDependencies": {
+    "@commitlint/cli": "^8.2.0",
+    "@commitlint/config-conventional": "^8.2.0",
+    "browser-sync": "^2.26.7",
+    "eslint": "^6.4.0",
+    "eslint-plugin-prettier": "^3.1.1",
+    "express": "^4.17.1",
+    "gulp": "^4.0.2",
+    "gulp-cli": "^2.2.0",
+    "gulp-concat": "^2.6.1",
+    "gulp-eslint": "^6.0.0",
+    "gulp-exec": "^4.0.0",
+    "gulp-prettier": "^2.1.0",
+    "gulp-rename": "^1.4.0",
+    "gulp-sass": "^4.0.2",
+    "gulp-sass-lint": "^1.4.0",
+    "gulp-uglify-es": "^1.0.4",
+    "gulp-util": "^3.0.8",
+    "husky": "^3.0.5",
+    "metalsmith": "^2.3.0",
+    "metalsmith-excludes": "^1.0.0",
+    "metalsmith-filter": "^1.0.2",
+    "metalsmith-layouts": "^2.3.1",
+    "metalsmith-markdown": "^1.2.0",
+    "metalsmith-sass": "^1.6.0",
+    "npm-run-all": "^4.1.5",
+    "rimraf": "^3.0.0",
+    "run-node": "^1.0.0"
+  },
+  "husky": {
+    "hooks": {
+      "prepare-commit-msg": "npm-run-all lint",
+      "commit-msg": "commitlint -e $HUSKY_GIT_PARAMS",
+      "pre-push": "npm-run-all test"
+    }
+  }
 }
