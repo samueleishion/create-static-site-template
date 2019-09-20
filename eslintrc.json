@@ -1,5 +1,8 @@
 {
-  "plugins": [],
+  "plugins": [
+    "html",
+    "markdown"
+  ],
   "parser": "espree",
   "parserOptions": {
     "ecmaVersion": 6,
