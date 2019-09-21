@@ -29,6 +29,15 @@ let CONFIG = {
       stdout: true
     }
   },
+  sass: {
+    build: {
+      includePaths: ['./src/styles/', './src/modules'],
+      outputStyle: 'compressed'
+    },
+    lint: {
+      configFile: '.sass-lint.yml'
+    }
+  },
   eslint: {
     configFile: 'eslintrc.json',
     rules: {
@@ -37,9 +46,6 @@ let CONFIG = {
   },
   prettier: {
     config: '.prettierrc'
-  },
-  sasslint: {
-    configFile: '.sass-lint.yml'
   },
   axe: {
     urls: function(file) {
@@ -92,10 +98,7 @@ gulp.task('sass', function() {
   return gulp
     .src(['./src/styles/global.scss'])
     .pipe(
-      sass({
-        includePaths: ['./src/styles/', './src/modules'],
-        outputStyle: 'compressed'
-      }).on('error', sass.logError)
+      sass(CONFIG.sass.build).on('error', sass.logError)
     )
     .pipe(rename('bundle.min.css'))
     .pipe(gulp.dest('./static/_styles'));
@@ -104,7 +107,7 @@ gulp.task('sass', function() {
 gulp.task('sass:lint', function() {
   return gulp
     .src(['./src/components/**/*.scss', './src/layouts/_stys/*.scss'])
-    .pipe(sasslint(CONFIG.sasslint))
+    .pipe(sasslint(CONFIG.sass.lint))
     .pipe(sasslint.format())
     .pipe(sasslint.failOnError());
 });
