@@ -44,10 +44,9 @@ let CONFIG = {
   axe: {
     urls: function(file) {
       var host = 'http://localhost:9999/';
-      var dir = file.substring(file.lastIndexOf('/'));
-      var page = file.substring(file.lastIndexOf('/') + 1, file.lastIndexOf('.'));
+      var filename = file.substring(file.lastIndexOf('/') + 1, file.lastIndexOf('.'));
 
-      return host + path;
+      return host + filename;
     },
     tags: ['wcag2a','wcag2aa']
   }
@@ -106,7 +105,7 @@ gulp.task('sass:lint', function() {
   return gulp
     .src(['./src/components/**/*.scss', './src/layouts/_stys/*.scss'])
     .pipe(sasslint(CONFIG.sasslint))
-    .pipe(sassling.format())
+    .pipe(sasslint.format())
     .pipe(sasslint.failOnError());
 });
 
