@@ -1,4 +1,4 @@
-$css-global-font-size: 16px;
+$css-global-font-size: 14px;
 
 html {
   font-size: $css-global-font-size;
@@ -9,13 +9,13 @@ body {
   color: $css-color-katana;
   font-family: sans-serif;
   font-size: $css-global-font-size;
-  padding: 20px;
+  padding: 40px;
 }
 
 main {
   background-color: $css-color-screen;
-  min-height: calc(100vh - 40px);
-  padding: 20px;
+  min-height: calc(100vh - 80px);
+  padding: 40px;
 }
 
 h1 {
