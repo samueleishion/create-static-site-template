@@ -9,11 +9,11 @@ body {
   color: $css-color-katana;
   font-family: sans-serif;
   font-size: $css-global-font-size;
-  padding: 40px;
 }
 
 main {
   background-color: $css-color-screen;
+  margin: 40px;
   min-height: calc(100vh - 80px);
   padding: 40px;
 }
