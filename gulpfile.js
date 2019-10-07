@@ -11,7 +11,7 @@ const prettier = require('gulp-prettier');
 const sasslint = require('gulp-sass-lint');
 const uglify = require('gulp-uglify-es').default;
 const bs = require('browser-sync').create();
-const axe = require('gulp-axe-cli');
+const axe = require('gulp-axe-webdriver');
 
 let CONFIG = {
   browsersync: {
@@ -48,13 +48,9 @@ let CONFIG = {
     config: '.prettierrc'
   },
   axe: {
-    urls: function(file) {
-      var host = 'http://localhost:9999/';
-      var filename = file.substring(file.lastIndexOf('/') + 1, file.lastIndexOf('.'));
-
-      return host + filename;
-    },
-    tags: ['wcag2a','wcag2aa']
+    urls: ['./static/**/*.html'],
+    tags: ['wcag2a','wcag2aa'],
+    headless: true
   }
 };
 
@@ -178,10 +174,7 @@ gulp.task('copy:vendor', gulp.parallel(
 // =======================
 */
 gulp.task("test:a11y", function() {
-  return gulp
-    .src(["./static/**/*.html"])
-    .pipe(axe(CONFIG.axe))
-    .pipe(gulp.dest('./.axe-dump'));
+  return axe(CONFIG.axe);
 });
 
 gulp.task("test", gulp.series("test:a11y"));
