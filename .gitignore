@@ -7,3 +7,4 @@ node_modules
 npm-debug.log
 static/
 aXeReports/
+.axe-dump/
