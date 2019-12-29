@@ -8,9 +8,9 @@ const terminal = require('terminal-kit').terminal;
 
 Metalsmith(__dirname)
   .metadata({
-    title: 'Built with create-static-site',
+    title: 'Built with create-static-site-template',
     description: '',
-    generator: 'create-static-site',
+    generator: 'create-static-site-template',
     url: ''
   })
   .source('./src/modules')
@@ -29,13 +29,13 @@ Metalsmith(__dirname)
     '**/*.html'
   ]))
   .use(function(files, metalsmith) {
-    terminal.cyan('[create-static-site] ').defaultColor('building HTML ...\n');
+    terminal.cyan('[create-static-site-template] ').defaultColor('building HTML ...\n');
   })
   .build(function(err, files) {
     if(err) {
-      terminal.cyan('[create-static-site] ').defaultColor('building HTML ').red('ERROR\n');
+      terminal.cyan('[create-static-site-template] ').defaultColor('building HTML ').red('ERROR\n');
       throw err;
     } else {
-      terminal.cyan('[create-static-site] ').defaultColor('building HTML ').green('DONE\n');
+      terminal.cyan('[create-static-site-template] ').defaultColor('building HTML ').green('DONE\n');
     }
   });

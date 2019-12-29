@@ -1,5 +1,5 @@
 {
-  "name": "create-static-site",
+  "name": "create-static-site-template",
   "version": "0.0.1",
   "description": "Static site generator with express, node, metalsmith, and sass.",
   "main": "index.js",
@@ -26,12 +26,12 @@
   "dependencies": {},
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/samueleishion/create-static-site.git"
+    "url": "git+https://github.com/samueleishion/create-static-site-template.git"
   },
   "bugs": {
-    "url": "https://github.com/samueleishion/create-static-site/issues"
+    "url": "https://github.com/samueleishion/create-static-site-template/issues"
   },
-  "homepage": "https://github.com/samueleishion/create-static-site#readme",
+  "homepage": "https://github.com/samueleishion/create-static-site-template#readme",
   "devDependencies": {
     "@commitlint/cli": "^8.2.0",
     "@commitlint/config-conventional": "^8.2.0",
