@@ -1,45 +1,82 @@
 {
-  "name": "create-static-site",
+  "name": "create-static-site-template",
   "version": "0.0.1",
-  "description": "Static site generator with express and node.",
+  "description": "Static site generator with express, node, metalsmith, and sass.",
   "main": "index.js",
   "scripts": {
-    "reset": "rm -rf node_modules; rm -rf static/scrs; rm -rf static/stys; ",
-    "postinstall": "mkdir static/scrs; mkdir static/stys; npm run build:prod",
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "build:dev": "npm run serve & gulp dev",
-    "build:prod": "gulp prod",
-    "serve": "node index.js",
-    "lint:prettier": "./node_modules/prettier/bin/prettier.js --config ./.prettierrc --write \"./src/**/*.js*\"",
-    "lint:eslint": "./node_modules/eslint/bin/eslint.js --config ./eslintrc.json --fix --ext .js,.jsx ./src",
-    "lint": "npm run lint:prettier; npm run lint:eslint"
+    "reset": "rimraf node_modules static .axe-dump",
+    "prepare": "npm-run-all build:prod",
+    "build:dev": "npm-run-all --parallel serve \"gulp build:dev\"",
+    "build:prod": "gulp build:prod",
+    "serve": "run-node server.js",
+    "start": "npm-run-all build:dev",
+    "lint:prettier": "prettier --config ./.prettierrc --write \"./src/modules/*.js\" \"./src/scripts/*.js\"",
+    "lint:eslint": "eslint --config ./eslintrc.json --fix --ext .js ./src/modules/** ./src/scripts/**",
+    "lint:sass": "sass-lint --config ./.sass-lint.yml './src/styles/*.scss' './src/modules/**/*.scss' -q -v",
+    "lint": "npm-run-all lint:*",
+    "test:a11y": "gulp test",
+    "test": "npm-run-all test:*",
+    "eslint": "eslint",
+    "gulp": "gulp",
+    "prettier": "prettier",
+    "rimraf": "rimraf"
   },
   "author": "samueleishion",
   "license": "ISC",
-  "dependencies": {
-    "browser-sync": "^2.18.13",
-    "express": "^4.15.5",
-    "gulp": "^3.9.1",
-    "gulp-cli": "^1.2.1",
-    "gulp-concat": "^2.6.1",
-    "gulp-eslint": "^4.0.0",
-    "gulp-exec": "^2.1.3",
-    "gulp-prettier": "^1.1.0",
-    "gulp-rename": "^1.2.2",
-    "gulp-sass": "^3.1.0",
-    "gulp-uglify": "^3.0.0",
-    "gulp-util": "^3.0.7",
-    "gulp-watch": "^4.3.11"
-  },
+  "dependencies": {},
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/samueleishion/xexn.git"
+    "url": "git+https://github.com/samueleishion/create-static-site-template.git"
   },
   "bugs": {
-    "url": "https://github.com/samueleishion/xexn/issues"
+    "url": "https://github.com/samueleishion/create-static-site-template/issues"
   },
-  "homepage": "https://github.com/samueleishion/xexn#readme",
-  "pre-commit": [
-    "lint"
-  ]
+  "homepage": "https://github.com/samueleishion/create-static-site-template#readme",
+  "devDependencies": {
+    "@commitlint/cli": "^8.2.0",
+    "@commitlint/config-conventional": "^8.2.0",
+    "browser-sync": "^2.26.7",
+    "eslint": "^6.4.0",
+    "eslint-plugin-html": "^6.0.0",
+    "eslint-plugin-markdown": "^1.0.0",
+    "eslint-plugin-prettier": "^3.1.1",
+    "express": "^4.17.1",
+    "gulp": "^4.0.2",
+    "gulp-axe-cli": "^1.0.0",
+    "gulp-concat": "^2.6.1",
+    "gulp-eslint": "^6.0.0",
+    "gulp-exec": "^4.0.0",
+    "gulp-prettier": "^2.1.0",
+    "gulp-rename": "^1.4.0",
+    "gulp-sass": "^4.0.2",
+    "gulp-sass-lint": "^1.4.0",
+    "gulp-uglify-es": "^1.0.4",
+    "gulp-util": "^3.0.8",
+    "handlebars": "^4.5.3",
+    "husky": "^3.0.5",
+    "metalsmith": "^2.3.0",
+    "metalsmith-excludes": "^1.0.0",
+    "metalsmith-filter": "^1.0.2",
+    "metalsmith-layouts": "^1.8.1",
+    "metalsmith-markdown": "^1.3.0",
+    "metalsmith-permalinks": "^2.2.0",
+    "metalsmith-sass": "^1.6.0",
+    "npm-run-all": "^4.1.5",
+    "prettier": "^1.18.2",
+    "rimraf": "^3.0.0",
+    "run-node": "^1.0.0",
+    "sass-lint": "^1.13.1",
+    "terminal-kit": "^1.31.3"
+  },
+  "husky": {
+    "hooks": {
+      "prepare-commit-msg": "npm-run-all lint",
+      "commit-msg": "commitlint -e $HUSKY_GIT_PARAMS",
+      "pre-push": "npm-run-all test"
+    }
+  },
+  "engines": {
+    "npm": ">=6.0.0",
+    "node": ">=10.0.0"
+  }
 }

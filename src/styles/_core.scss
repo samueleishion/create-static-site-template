@@ -1,0 +1,61 @@
+$css-global-font-size: 14px;
+
+html {
+  font-size: $css-global-font-size;
+}
+
+body {
+  background-color: $css-color-white;
+  color: $css-color-katana;
+  font-family: sans-serif;
+  font-size: $css-global-font-size;
+}
+
+main {
+  background-color: $css-color-screen;
+  margin: 40px;
+  min-height: calc(100vh - 80px);
+  padding: 40px;
+}
+
+h1 {
+  font-weight: 600;
+}
+
+a {
+  color: $css-color-turquoise--darker;
+  text-decoration: underline;
+
+  &:hover,
+  &:focus {
+    background-color: $css-color-turquoise--darkest;
+    color: $css-color-white;
+  }
+}
+
+ul {
+  list-style: none;
+  padding: 20px 0;
+
+  li {
+    background-color: $css-color-white;
+    border-top: 1px solid $css-color-ocean;
+    padding: 10px;
+
+    &:first-child {
+      border-top: 2px solid $css-color-turquoise--light;
+    }
+
+    &:last-child {
+      border-bottom: 2px solid $css-color-turquoise--light;
+    }
+
+    &:nth-child(2n) {
+      background-color: $css-color-wash;
+    }
+
+    p {
+      margin-bottom: 0;
+    }
+  }
+}
