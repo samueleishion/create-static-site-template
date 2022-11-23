@@ -35,7 +35,7 @@
   "devDependencies": {
     "@commitlint/cli": "^8.2.0",
     "@commitlint/config-conventional": "^8.2.0",
-    "browser-sync": "^2.26.7",
+    "browser-sync": "^2.27.10",
     "eslint": "^6.4.0",
     "eslint-plugin-html": "^6.0.0",
     "eslint-plugin-markdown": "^1.0.0",
